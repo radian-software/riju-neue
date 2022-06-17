@@ -1,10 +1,11 @@
 FROM golang:1.18 AS build
 WORKDIR /src
 
-COPY go.mod ./
+COPY go.mod go.sum ./
 RUN go mod download
 
 COPY cmd/ ./cmd/
+COPY server ./server/
 RUN go build -o /usr/local/bin/riju-publicapi ./cmd/riju-publicapi
 
 FROM ubuntu:22.04
