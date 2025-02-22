@@ -1,0 +1,55 @@
+---
+kind: Namespace
+apiVersion: v1
+metadata:
+  name: publicapi
+
+---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  namespace: publicapi
+  name: publicapi
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      riju.radian.codes/app: publicapi
+  template:
+    metadata:
+      labels:
+        riju.radian.codes/app: publicapi
+      annotations:
+        kubectl.kubernetes.io/default-exec-container: publicapi
+    spec:
+      containers:
+        - name: publicapi
+          image: "{{ .image }}"
+          ports:
+            - name: http
+              containerPort: 8080
+            - name: metrics
+              containerPort: 8081
+          livenessProbe:
+            httpGet:
+              port: metrics
+              path: /liveness
+          readinessProbe:
+            httpGet:
+              port: metrics
+              path: readiness
+
+---
+kind: Service
+apiVersion: v1
+metadata:
+  namespace: publicapi
+  name: publicapi
+spec:
+  selector:
+    riju.radian.codes/app: publicapi
+  ports:
+    - name: http
+      port: 8080
+    - name: metrics
+      port: 8081
