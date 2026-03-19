@@ -5,6 +5,8 @@ Project to rewrite some components of
 architectural issues. If this sees the light of day, it means the
 project was a success.
 
+(Edit 2026: or maybe not.)
+
 ## Design concerns
 
 Central issue is that we need to run untrusted user code in an
